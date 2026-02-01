@@ -207,6 +207,7 @@ Example `prompt.txt`:
 ```text
 Rate this article on a scale of 0-100 based on how relevant it is to embedded systems.
 Title: {{.Title}}
+Description: {{.Description}}
 Content: {{.Content}}
 ```
 
