@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ai-rss-scraper
+description: A Helm chart for ai-rss-scraper
+type: application
+version: 0.0.1
+appVersion: "0.0.1"

@@ -1,0 +1,49 @@
+service:
+  type: ClusterIP
+  port: 80
+  # nodePort: 30080 # Optional, only for NodePort type
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+image:
+  repository: smbaker/ai-rss-scraper
+  pullPolicy: Always
+  #IfNotPresent
+  tag: "0.0.1"
+
+storage:
+  size: 1Gi
+  className: standard
+  hostPath:
+    enabled: false
+    path: "/tmp/ai-rss-scraper-data"
+
+config:
+  feedUrl: "https://hackaday.com/blog/feed/"
+  model: "gemini-3-flash"
+  baseUrl: "https://api.poe.com/v1"
+  runInterval: "1h"
+  # Set these secrets securely in production, or override here
+  apiKey: ""
+  dbPath: "/data/rss_history.db"
+  email:
+    smarthost: ""
+    to: ""
+    from: ""
+    identity: ""
+    username: ""
+    password: ""
+    subject: "RSS Article Scrape Results"
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

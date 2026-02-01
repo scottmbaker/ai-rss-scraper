@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ai-rss-scraper
+  labels:
+    app: ai-rss-scraper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-rss-scraper
+  template:
+    metadata:
+      labels:
+        app: ai-rss-scraper
+    spec:
+      containers:
+        - name: ai-rss-scraper
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/root/ai-rss-scraper", "run", "--interval", "{{ .Values.config.runInterval }}", "--send-email", "--serve"]
+          env:
+            - name: API_KEY
+              value: {{ .Values.config.apiKey | quote }}
+            - name: BASE_URL
+              value: {{ .Values.config.baseUrl | quote }}
+            - name: MODEL
+              value: {{ .Values.config.model | quote }}
+            - name: FEED_URL
+              value: {{ .Values.config.feedUrl | quote }}
+            - name: DB_PATH
+              value: {{ .Values.config.dbPath | quote }}              
+            - name: EMAIL_SMARTHOST
+              value: {{ .Values.config.email.smarthost | quote }}
+            - name: EMAIL_TO
+              value: {{ .Values.config.email.to | quote }}
+            - name: EMAIL_FROM
+              value: {{ .Values.config.email.from | quote }}
+            - name: EMAIL_IDENTITY
+              value: {{ .Values.config.email.identity | quote }}
+            - name: EMAIL_USERNAME
+              value: {{ .Values.config.email.username | quote }}
+            - name: EMAIL_PASSWORD
+              value: {{ .Values.config.email.password | quote }}
+            - name: EMAIL_SUBJECT
+              value: {{ .Values.config.email.subject | quote }}
+          volumeMounts:
+            - name: data
+              mountPath: /data/
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pvc
