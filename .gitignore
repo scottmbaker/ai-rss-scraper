@@ -1,2 +1,4 @@
 scott-config.yaml
 helm/values-scott.yaml
+keys-private.txt
+rss_history.db
